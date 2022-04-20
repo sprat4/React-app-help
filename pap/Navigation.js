@@ -26,6 +26,7 @@ export function Navigation() {
                 />
                 <Tab.Screen name="ProfileScreen" component={ProfileScreen}
                             options={{
+                                headerShown: false,
                                 tabBarLabel: 'Perfil',
                                 tabBarIcon: ({ color, size }) => (
                                     <Ionicons name="person" color={color} size={size} />

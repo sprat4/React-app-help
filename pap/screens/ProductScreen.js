@@ -8,9 +8,12 @@ export function ProductScreen({route,navigation}) {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
 
+    let query= 'https://bar.aemgnascente.pt/categories.php?table=products&category='+category;
+
+
     const getProducts = async () => {
         try {
-            const response = await fetch('https://bar.aemgnascente.pt/categories.php?table=products&category='+category);
+            const response = await fetch(query);
             const json = await response.json();
             setData(json.products);
         } catch (error) {
@@ -22,7 +25,9 @@ export function ProductScreen({route,navigation}) {
 
     useEffect(() => {
         getProducts();
-    }, []);
+    }, [category]);
+
+
 
     return (
         <View style={{ flex: 1, padding: 24 }}>
@@ -33,7 +38,8 @@ export function ProductScreen({route,navigation}) {
                     renderItem={({ item }) => (
                         <ProductCard
                             product={item}
-                            onPress={() => navigation.navigate('Perfil')
+                            onPress={() =>
+                                navigation.navigate('ProfileScreen')
                             }
                         />
                     )}
