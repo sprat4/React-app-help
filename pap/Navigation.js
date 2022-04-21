@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeScreen } from './screens/HomeScreen';
 import { ProfileScreen } from './screens/ProfileScreen';
 import { ProductScreen } from './screens/ProductScreen';
-
+import { CartScreen } from './screens/CartScreen';
 import { Ionicons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
@@ -33,16 +33,26 @@ export function Navigation() {
                                 ),
                             }}
                 />
-                <Tab.Screen name="ProductScreen" component={ProductScreen}
+                <Tab.Screen  name="ProductScreen" component={ProductScreen}
                             options={{
                                 headerShown: false,
                                 tabBarLabel: 'Produtos',
                                 tabBarIcon: ({ color, size }) => (
-                                    <Ionicons name="cart" color={color} size={size} />
+                                <Ionicons name="cart" color={color} size={size} />
                                 ),
                             }}
                 />
+                <Tab.Screen  name="CartScreen" component={CartScreen}
+                             options={{
+                                 headerShown: false,
+                                 tabBarLabel: 'Carrinho',
+                                 tabBarIcon: ({ color, size }) => (
+                                     <Ionicons name="cart" color={color} size={size} />
+                                 ),
+                             }}
+                />
             </Tab.Navigator>
         </NavigationContainer>
+
     );
 }

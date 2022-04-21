@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, View } from 'react-native';
 import {CategoryCard} from '../components/CategoryCard';
-import {ProductScreen} from '../screens/ProductScreen';
+import {ProductScreen} from './ProductScreen';
 
 
 export function HomeScreen({navigation}) {
@@ -29,7 +29,7 @@ export function HomeScreen({navigation}) {
             {isLoading ? <ActivityIndicator/> : (
                 <FlatList
                     data={data}
-                    keyExtractor={({ categoriaId }, index) => categoriaId}
+                    keyExtractor={({ categoriaId }) => categoriaId}
                     renderItem={({ item }) => (
                         <CategoryCard
                             category={item}
@@ -43,4 +43,4 @@ export function HomeScreen({navigation}) {
             )}
         </View>
     );
-};
+}
