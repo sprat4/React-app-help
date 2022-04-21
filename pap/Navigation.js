@@ -1,14 +1,26 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { HomeScreen } from './screens/HomeScreen';
 import { ProfileScreen } from './screens/ProfileScreen';
 import { ProductScreen } from './screens/ProductScreen';
 import { CartScreen } from './screens/CartScreen';
-import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const Tab = createBottomTabNavigator();
+import { createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
+
+function MyStack() {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="Home" component={HomeScreen} />
+        </Stack.Navigator>
+    );
+}
+
+const Tab = createMaterialBottomTabNavigator();
 
 export function Navigation() {
     return (
@@ -20,7 +32,7 @@ export function Navigation() {
                                 headerShown: false,
                                 tabBarLabel: 'Home',
                                 tabBarIcon: ({ color, size }) => (
-                                    <Ionicons name="home" color={color} size={size} />
+                                    <MaterialCommunityIcons name="home" color={color} size={25} />
                                 ),
                             }}
                 />
@@ -29,16 +41,15 @@ export function Navigation() {
                                 headerShown: false,
                                 tabBarLabel: 'Perfil',
                                 tabBarIcon: ({ color, size }) => (
-                                    <Ionicons name="person" color={color} size={size} />
+                                    <MaterialCommunityIcons name="account" color={color} size={25} />
                                 ),
                             }}
                 />
                 <Tab.Screen  name="ProductScreen" component={ProductScreen}
                             options={{
-                                headerShown: false,
                                 tabBarLabel: 'Produtos',
                                 tabBarIcon: ({ color, size }) => (
-                                <Ionicons name="cart" color={color} size={size} />
+                                <MaterialCommunityIcons name="tag" color={color} size={25} />
                                 ),
                             }}
                 />
@@ -46,8 +57,9 @@ export function Navigation() {
                              options={{
                                  headerShown: false,
                                  tabBarLabel: 'Carrinho',
+                                 labeled: false,
                                  tabBarIcon: ({ color, size }) => (
-                                     <Ionicons name="cart" color={color} size={size} />
+                                     <MaterialCommunityIcons name="cart" color={color} size={25} />
                                  ),
                              }}
                 />

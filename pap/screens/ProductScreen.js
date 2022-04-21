@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import {ProductCard} from '../components/ProductCard';
-
-
 
 export function ProductScreen({route,navigation}) {
     // if routes.params is undefined create variable category with value of 0 , else category will have the value of the routes.params
@@ -42,8 +40,11 @@ export function ProductScreen({route,navigation}) {
                     renderItem={({ item }) => (
                         <ProductCard
                             product={item}
-                            onPress={() =>
-                                navigation.navigate('ProfileScreen')
+                            onPress={() => {
+                                    navigation.navigate('ProductDetail', {
+                                        product: item
+                                    });
+                                }
                             }
                         />
                     )}
