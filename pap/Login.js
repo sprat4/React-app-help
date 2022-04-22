@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { StyleSheet,  Text,  View, Image,  TextInput, Button,  TouchableOpacity,} from "react-native";
 import { storeData } from "./Services/User";
 import { createStackNavigator } from '@react-navigation/stack';
-//import screens from screens folder
 import {Navigation} from "./Navigation";
 import {NavigationContainer} from "@react-navigation/native";
 
@@ -20,8 +19,8 @@ export  function Login({navigation}) {
             const response = await fetch('https://bar.aemgnascente.pt/user.php', {
                 method: 'POST',
                 headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     username: email,
