@@ -1,10 +1,26 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { StyleSheet,  Text,  View, Image,  TextInput, Button,  TouchableOpacity,} from "react-native";
 import { storeData } from "./Services/User";
 import { createStackNavigator } from '@react-navigation/stack';
 import {Navigation} from "./Navigation";
 import {NavigationContainer} from "@react-navigation/native";
+
+
+/*
+, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: email,
+                    password: password
+                })
+            }
+*/
+
 
 
 const Stack = createStackNavigator();
@@ -15,29 +31,19 @@ export  function Login({navigation}) {
     const [password, setPassword] = useState("");
 
     async function logUser({navigation}){
-        try {
-            const response = await fetch('https://bar.aemgnascente.pt/user.php', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: email,
-                    password: password
-                })
-            });
+            const response = await fetch('https://bar.aemgnascente.pt/user.php?username='+email+'&password='+password);
             const json = await response.json();
             if(json.user === true){
-                navigation.navigate('Nav');
                 await storeData('email', email);
                 await storeData('password',password);
-            }
-        } catch (error) {
-            console.error(error);
-        }
 
+                navigation.navigate('Nav');
+            }
+            else{
+                console.warn("Email ou Password incorretos");
+            }
     }
+
 
     return (
         <NavigationContainer>
