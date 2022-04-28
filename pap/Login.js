@@ -51,6 +51,7 @@ export default class Login extends React.Component {
     componentDidMount() {
         this.getDbList();
     }
+
     getDbList = () => {
         try {
 
@@ -92,6 +93,7 @@ export default class Login extends React.Component {
             console.log(error);
         }
     };
+
     validateAndLogin = () => {
 
         Keyboard.dismiss();
@@ -99,10 +101,15 @@ export default class Login extends React.Component {
         let pwd = this.state.pwd;
         let db = this.state.selectedDb;
         fetch('https://bar.aemgnascente.pt/user.php?username='+email+'&password='+pwd , {
+            mode: 'cors',
             method: 'POST',
+            credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
+                'Origin': 'http://localhost:3000',
+
+
             },
             body: JSON.stringify({
                 jsonrpc: '2.0',
@@ -126,20 +133,22 @@ export default class Login extends React.Component {
                     })
                     .catch(error => {
                         console.log(error);
-                        alert(Constants.ERROR);
 
                     });
             });
     };
+
     Body = ({ children }) => (
         <ImageBackground style={styles.Body} source={require('./images/bg.jpg')}>
             <SafeAreaView
                 style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                {/* Show preloader until state variable isLoading is not false. Once it is then it'll display the children components instead. */}
                 {this.state.isLoading ? (
                     <View
                         style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                         <ActivityIndicator />
+                        <TouchableOpacity style={styles.loginBtn} onPress={() => this.setState({isLoading: !this.state.isLoading})}>
+                            <Text style={styles.loginText}>Hey</Text>
+                        </TouchableOpacity>
                     </View>
                 ) : (
                     children
@@ -153,10 +162,6 @@ render(){
     return (
     <this.Body loading={!this.state.isLoading}>
         <NavigationContainer>}
-            {//<Stack.Screen name={'Login'} component={Login} />
-            }
-            {//<Stack.Screen name={'Nav'} component={Navigation} />
-            }
             <View style={styles.container}>
                 <StatusBar style="auto" />
                 <View style={styles.inputView}>
@@ -187,22 +192,20 @@ render(){
                     <Text style={styles.loginText}>LOGIN</Text>
                 </TouchableOpacity>
             </View>
-            <Modal visible={!this.state.user}>
-                <this.Body>
-                    {/* Logo */}
-                    {/* Title */}
-                    <Text style={styles.Title}> {'Home'} </Text>
-
-                    <Text>{'Welcome, ' + this.state.user.name}</Text>
-                </this.Body>
-            </Modal>
         </NavigationContainer>
 </this.Body>
 );
 }
 }
-/**
- * const Stack = createStackNavigator();
+/*
+ *
+ *
+ *             {<Stack.Screen name={'Login'} component={Login} />}
+ *             {<Stack.Screen name={'Nav'} component={Navigation} />}
+ *
+ *             const Stack = createStackNavigator();
+ *
+ *
  *
  * export  function Login({navigation}) {
  *
@@ -335,6 +338,9 @@ render(){
  * }
  */
   const styles = StyleSheet.create({
+    Body: {
+        flex: 1,
+    },
     Logo: {
         height: 60,
         resizeMode: 'contain',
