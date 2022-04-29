@@ -40,67 +40,67 @@ export default class Login extends React.Component {
             this.state = {
             isLoading: true,
             dbList: [],
-            selectedDb: null,
+            selectedDb: '',
             pickerVisible: false,
             email: '',
             pwd: '',
             user: {},
         };
     }
-
-    componentDidMount() {
-        this.getDbList();
+    /*
+       componentDidMount() {
+           this.getDbList();
     }
 
-    getDbList = () => {
-        try {
+       /*getDbList = () => {
+           try {
 
-            fetch('https://bar.aemgnascente.pt/user.php?username='+email+'&password='+password ,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        username: email,
-                        password: password
-                    })
-                }
-        )
-                .then(response => {response.json()
-                .then(json => {
-                            console.log('Database List :', json);
-                            if (json.error) {
-                                console.log(json);
-                                return;
-                            }
-                            if (json.result) {
-                                this.setState({
-                                    isLoading: false,
-                                    dbList: [...json.result],
-                                });
-                            } else {
-                                console.log(json);
-                                alert('No database exists');
-                            }
-                        })
-                       .catch(error => {
-                            console.log(error);
-                        });
-                });
-        } catch (error) {
-            console.log(error);
-        }
-    };
+               fetch('https://bar.aemgnascente.pt/user.php?username='+email+'&password='+password ,
+                   {
+                       method: 'POST',
+                       headers: {
+                           'Accept': 'application/json',
+                           'Content-Type': 'application/json',
+                       },
+                       body: JSON.stringify({
+                           username: email,
+                           password: password
+                       })
+                   }
+           )
+                   .then(response => {response.json()
+                   .then(json => {
+                               console.log('Database List :', json);
+                               if (json.error) {
+                                   console.log(json);
+                                   return;
+                               }
+                               if (json.result) {
+                                   this.setState({
+                                       isLoading: false,
+                                       dbList: [...json.result],
+                                   });
+                               } else {
+                                   console.log(json);
+                                   alert('No database exists');
+                               }
+                           })
+                          .catch(error => {
+                               console.log(error);
+                           });
+                   });
+           } catch (error) {
+               console.log(error);
+           }
+       };*/
 
     validateAndLogin = () => {
 
         Keyboard.dismiss();
-        let email = this.state.email;
-        let pwd = this.state.pwd;
-        let db = this.state.selectedDb;
-        fetch('https://bar.aemgnascente.pt/user.php?username='+email+'&password='+pwd , {
+        let mail = this.state.email;
+        let pass = this.state.pwd;
+        console.warn(mail)
+        fetch('https://bar.aemgnascente.pt/user.php?username='+mail+'&password='+pass , {
             mode: 'cors',
             method: 'POST',
             credentials: 'include',
@@ -108,14 +108,10 @@ export default class Login extends React.Component {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
                 'Origin': 'http://localhost:3000',
-
-
             },
             body: JSON.stringify({
-                jsonrpc: '2.0',
-                method: 'call',
-                params: { login: email, password: pwd, db: db },
-                id: 844267375,
+                username: mail,
+                password: pass
             }),
         })
             .then(response => {
@@ -135,13 +131,12 @@ export default class Login extends React.Component {
                         console.log(error);
 
                     });
-            });
+            })
     };
 
     Body = ({ children }) => (
         <ImageBackground style={styles.Body} source={require('./images/bg.jpg')}>
-            <SafeAreaView
-                style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 {this.state.isLoading ? (
                     <View
                         style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -150,9 +145,9 @@ export default class Login extends React.Component {
                             <Text style={styles.loginText}>Hey</Text>
                         </TouchableOpacity>
                     </View>
-                ) : (
+                ) :
                     children
-                )}
+                }
             </SafeAreaView>
         </ImageBackground>
     );
@@ -161,7 +156,7 @@ export default class Login extends React.Component {
 render(){
     return (
     <this.Body loading={!this.state.isLoading}>
-        <NavigationContainer>}
+        <NavigationContainer>
             <View style={styles.container}>
                 <StatusBar style="auto" />
                 <View style={styles.inputView}>
@@ -190,6 +185,9 @@ render(){
                 </View>
                 <TouchableOpacity style={styles.loginBtn} onPress={this.validateAndLogin}>
                     <Text style={styles.loginText}>LOGIN</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.loginBtn} onPress={() => this.navigation.navigate('Nav')}>
+                    <Text style={styles.loginText}>nav</Text>
                 </TouchableOpacity>
             </View>
         </NavigationContainer>
