@@ -16,9 +16,10 @@ import {
     SafeAreaView,
 } from 'react-native';
 import { storeData } from "./Services/User";
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, } from '@react-navigation/stack';
 import {Navigation} from "./Navigation";
 import {NavigationContainer} from "@react-navigation/native";
+import { StackActions, NavigationActions } from 'react-navigation'; // Version can be
 
 /*
 , {
@@ -33,7 +34,7 @@ import {NavigationContainer} from "@react-navigation/native";
                 })
             }
 */
-export default class Login extends React.Component {
+class Login extends React.Component {
 
     constructor(props) {
         super(props);
@@ -94,14 +95,13 @@ export default class Login extends React.Component {
            }
        };*/
 
-    validateAndLogin = () => {
+    validateAndLogin = ({ navigation }) => {
 
         Keyboard.dismiss();
         let mail = this.state.email;
         let pass = this.state.pwd;
-        console.warn(mail)
         fetch('https://bar.aemgnascente.pt/user.php?username='+mail+'&password='+pass , {
-            mode: 'cors',
+            mode: 'no-cors',
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -118,34 +118,31 @@ export default class Login extends React.Component {
                     let json = response.json()
                     .then(json => {
                        if (json.error) {
-                            console.log(json);
+                            console.warn(json);
                             alert('Invalid email or password');
                             return;
                         }
-                        console.log(json);
+                       if(json.users.perm) {
+                           alert("You are logged in.");
+                           NavigationActions.navigate({ routeName: 'Nav' })
+                       }
                         this.setState({
-                            user: json.result,
+                            user: json,
                         });
+                        console.warn(this.state.user)
                     })
                     .catch(error => {
-                        console.log(error);
+                        console.warn(error);
 
                     });
             })
-    };
 
+    };
     Body = ({ children }) => (
+
         <ImageBackground style={styles.Body} source={require('./images/bg.jpg')}>
             <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                {this.state.isLoading ? (
-                    <View
-                        style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                        <ActivityIndicator />
-                        <TouchableOpacity style={styles.loginBtn} onPress={() => this.setState({isLoading: !this.state.isLoading})}>
-                            <Text style={styles.loginText}>Hey</Text>
-                        </TouchableOpacity>
-                    </View>
-                ) :
+                {
                     children
                 }
             </SafeAreaView>
@@ -154,6 +151,7 @@ export default class Login extends React.Component {
 
 
 render(){
+
     return (
     <this.Body loading={!this.state.isLoading}>
         <NavigationContainer>
@@ -186,22 +184,27 @@ render(){
                 <TouchableOpacity style={styles.loginBtn} onPress={this.validateAndLogin}>
                     <Text style={styles.loginText}>LOGIN</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.loginBtn} onPress={() => this.navigation.navigate('Nav')}>
-                    <Text style={styles.loginText}>nav</Text>
-                </TouchableOpacity>
             </View>
         </NavigationContainer>
 </this.Body>
 );
 }
 }
+
+export default createStackNavigator({
+    Home: {
+        screen: Login,
+    },
+    Nav: {
+        screen: Navigation,
+    }
+})
 /*
  *
  *
- *             {<Stack.Screen name={'Login'} component={Login} />}
- *             {<Stack.Screen name={'Nav'} component={Navigation} />}
  *
- *             const Stack = createStackNavigator();
+ *
+ *
  *
  *
  *
@@ -481,3 +484,13 @@ render(){
          fontSize: 18,
       },
   });
+
+
+
+
+
+
+
+
+
+
