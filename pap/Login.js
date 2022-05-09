@@ -19,7 +19,8 @@ import { storeData } from "./Services/User";
 import { createStackNavigator, } from '@react-navigation/stack';
 import {Navigation} from "./Navigation";
 import {NavigationContainer} from "@react-navigation/native";
-import { StackActions, NavigationActions } from 'react-navigation'; // Version can be
+import {useNavigation} from '@react-navigation/native';
+import {StackActions, NavigationActions, createAppContainer} from 'react-navigation';
 
 /*
 , {
@@ -34,7 +35,23 @@ import { StackActions, NavigationActions } from 'react-navigation'; // Version c
                 })
             }
 */
-class Login extends React.Component {
+
+
+const Stack = createStackNavigator();
+import { createNavigationContainerRef } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
+const navigationRef = createNavigationContainerRef()
+
+function navigate(name) {
+    if (!navigationRef.isReady()) {
+        navigationRef.navigate(name, parms);
+    }
+}
+
+
+export default class Login extends React.Component {
 
     constructor(props) {
         super(props);
@@ -48,59 +65,23 @@ class Login extends React.Component {
             user: {},
         };
     }
-    /*
-       componentDidMount() {
-           this.getDbList();
-    }
+    static navigationOp = {
+        drawerLabel: 'Nav',
+        drawerIcon: ({ tintColor }) => (
+            <MaterialIcons
+                name="home"
+                size={24}
+                style={{ color: tintColor }}
+            />
+        )
+    };
 
-       /*getDbList = () => {
-           try {
-
-               fetch('https://bar.aemgnascente.pt/user.php?username='+email+'&password='+password ,
-                   {
-                       method: 'POST',
-                       headers: {
-                           'Accept': 'application/json',
-                           'Content-Type': 'application/json',
-                       },
-                       body: JSON.stringify({
-                           username: email,
-                           password: password
-                       })
-                   }
-           )
-                   .then(response => {response.json()
-                   .then(json => {
-                               console.log('Database List :', json);
-                               if (json.error) {
-                                   console.log(json);
-                                   return;
-                               }
-                               if (json.result) {
-                                   this.setState({
-                                       isLoading: false,
-                                       dbList: [...json.result],
-                                   });
-                               } else {
-                                   console.log(json);
-                                   alert('No database exists');
-                               }
-                           })
-                          .catch(error => {
-                               console.log(error);
-                           });
-                   });
-           } catch (error) {
-               console.log(error);
-           }
-       };*/
-
-    validateAndLogin = ({ navigation }) => {
-
+    validateAndLogin = ({navigation}) => {
         Keyboard.dismiss();
         let mail = this.state.email;
         let pass = this.state.pwd;
-        fetch('https://bar.aemgnascente.pt/user.php?username='+mail+'&password='+pass , {
+        fetch(//Link for my server, only return if the user have permission "true" or "false"
+             , {
             mode: 'no-cors',
             method: 'POST',
             credentials: 'include',
@@ -117,14 +98,14 @@ class Login extends React.Component {
             .then(response => {
                     let json = response.json()
                     .then(json => {
-                       if (json.error) {
+                       if (!json.user.perm) {
                             console.warn(json);
                             alert('Invalid email or password');
                             return;
                         }
-                       if(json.users.perm) {
+                       if(json.user.perm) {
                            alert("You are logged in.");
-                           NavigationActions.navigate({ routeName: 'Nav' })
+                           navigation.navigate('Navigation') // Doesnt work (TypeError: undefined is not an object (navigation.navigate)
                        }
                         this.setState({
                             user: json,
@@ -133,25 +114,21 @@ class Login extends React.Component {
                     })
                     .catch(error => {
                         console.warn(error);
-
                     });
             })
-
     };
-    Body = ({ children }) => (
-
+    Body = ({ children }, {navigation}) => (
         <ImageBackground style={styles.Body} source={require('./images/bg.jpg')}>
-            <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                {
-                    children
-                }
+            <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                <Stack.Screen name="Log" component={Login} />
+                <Stack.Screen name="Nav" component={Navigation} />
+                {children}
+
             </SafeAreaView>
         </ImageBackground>
     );
 
-
 render(){
-
     return (
     <this.Body loading={!this.state.isLoading}>
         <NavigationContainer>
@@ -190,154 +167,6 @@ render(){
 );
 }
 }
-
-export default createStackNavigator({
-    Home: {
-        screen: Login,
-    },
-    Nav: {
-        screen: Navigation,
-    }
-})
-/*
- *
- *
- *
- *
- *
- *
- *
- *
- * export  function Login({navigation}) {
- *
- *     const [email, setEmail] = useState("");
- *     const [password, setPassword] = useState("");
- *
- *     function logUser(){
- *
- *
- *         return fetch ('https://bar.aemgnascente.pt/user.php?username='+email+'&password='+password, {
- *         method: "POST",
- *         body: JSON.stringify({
- *             email: this.state.email,
- *             password: this.state.password
- *         }),
- *         })
- *         .then((response) => response.json())
- *             .then((result) => {
- *                 if(result.user === true){
- *                     alert("You are logged in.");
- *                     this.navigation.navigate('Nav');
- *                 } else {
- *                     alert("“Please check your login information.”");
- *                 }
- *         });
- *
- *         //return console.warn('https://bar.aemgnascente.pt/user.php?username='+email+'&password='+password)
- *
- *         /*const response = await fetch('https://bar.aemgnascente.pt/user.php?username='+email+'&password='+password);
- *         const json = await response.json();
- *         try{
- *             if(json.user === true){
- *                 await storeData('email', email);
- *                 await storeData('password',password);
- *                 navigation.navigate('Nav');
- *             }
- *             else{
- *                 console.warn("Email ou Password incorretos");
- *             }
- *         }catch (err) {
- *             if(DocumentPicker.isCancel(err)) {
- *                 console.log("user cancelled");
- *             }
- *             throw err;
- *         }
- *
- *     return fetch('https://bar.aemgnascente.pt/user.php?username='+email+'&password='+password,{
- *             method: 'POST',
- *             headers: {
- *                 'Accept': 'application/json',
- *                 'Content-Type': 'application/json',
- *             },
- *             body: JSON.stringify({
- *                 username: email,
- *                 password: password
- *             })
- *         }
- *     )
- *         .then((response) => { return response.json() })
- *         .then(function(json){
- *             if(json.user === true){
- *                 storeData('email', email);
- *                 storeData('password',password);
- *                 navigation.navigate('Nav');
- *             }else{
- *                 console.warm("UH OH STINKY")
- *             }
- *         })
- *         .catch(function(error) {
- *             console.log('There has been a problem with your fetch operation: ' + error.message);
- *             // ADD THIS THROW error
- *             throw error;
- *         });
- *
- * }
- *
- *     function logUser() {
- *         return fetch('https://bar.aemgnascente.pt/user.php?username=' + email + '&password=' + password, {
- *             method: "POST",
- *             body: JSON.stringify({
- *                 email: email,
- *                 password: password
- *             }),
- *         })
- *             .then((response) => {
- *                 response.json()
- *             })
- *             .then(function (json) {
- *                 if (json.user === true) {
- *                     alert("You are logged in.");
- *                     navigation.navigate('Nav');
- *                 } else {
- *                     alert("“Please check your login information.”" + result.user);
- *                 }
- *             });
- *     }
- *
- *
- *     return (
- *         <NavigationContainer>
- *             <Stack.Screen name={'Login'} component={Login} />
- *             <Stack.Screen name={'Nav'} component={Navigation} />
- *
- *             <View style={styles.container}>
- *                 <StatusBar style="auto" />
- *                 <View style={styles.inputView}>
- *                     <TextInput
- *                         style={styles.TextInput}
- *                         placeholder="Email."
- *                         placeholderTextColor="#003f5c"
- *                         onChangeText={(email) => setEmail(email)}
- *                     />
- *                 </View>
- *                 <View style={styles.inputView}>
- *                     <TextInput
- *                         style={styles.TextInput}
- *                         placeholder="Password."
- *                         placeholderTextColor="#003f5c"
- *                         secureTextEntry={true}
- *                         onChangeText={(password) => setPassword(password)}
- *                     />
- *                 </View>
- *                 <TouchableOpacity style={styles.loginBtn} onPress={()=>logUser()}>
- *                     <Text style={styles.loginText}>LOGIN</Text>
- *                 </TouchableOpacity>
- *             </View>
- *         </NavigationContainer>
- *     );
- *
- * }
- */
   const styles = StyleSheet.create({
     Body: {
         flex: 1,
@@ -484,13 +313,4 @@ export default createStackNavigator({
          fontSize: 18,
       },
   });
-
-
-
-
-
-
-
-
-
 

@@ -1,16 +1,21 @@
 import { createStackNavigator } from '@react-navigation/stack';
-//import screens from screens folder
-import {HomeScreen} from "./screens/HomeScreen";
-import {Login} from "./Login";
+import {Navigation} from "./Navigation";
+import {Log} from "./Login";
+import React from "react";
 
 
-const Stack = createStackNavigator();
+const RootStack = createStackNavigator(
+    {
+        Login: Log,
+        Nav: Navigation,
+    },
+    {
+        initialRouteName: 'Login',
+    }
+);
 
-function MyStack() {
-    return (
-        <Stack.Navigator>
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name={'Login'} component={Login} />
-        </Stack.Navigator>
-    );
+export default class Navi extends React.Component {
+    render() {
+        return <RootStack />;
+    }
 }

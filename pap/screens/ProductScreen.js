@@ -13,7 +13,7 @@ export function ProductScreen({route,navigation}) {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
 
-    let query= 'https://bar.aemgnascente.pt/categories.php?table=products&category='+category;
+    let query= //Link for my server, only return the products from a specific category;
 
     const getProducts = async () => {
         try {

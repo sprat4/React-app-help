@@ -10,7 +10,7 @@ export function HomeScreen({navigation}) {
 
     const getCategories = async () => {
         try {
-            const response = await fetch('https://bar.aemgnascente.pt/categories.php?table=categories');
+            const response = await fetch(//Link for my server, only return categories);
             const json = await response.json();
             setData(json.categories)
         } catch (error) {
