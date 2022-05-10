@@ -21,34 +21,13 @@ import {Navigation} from "./Navigation";
 import {NavigationContainer} from "@react-navigation/native";
 import {useNavigation} from '@react-navigation/native';
 import {StackActions, NavigationActions, createAppContainer} from 'react-navigation';
-
-/*
-, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: email,
-                    password: password
-                })
-            }
-*/
-
-
-const Stack = createStackNavigator();
 import { createNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
-const navigationRef = createNavigationContainerRef()
 
-function navigate(name) {
-    if (!navigationRef.isReady()) {
-        navigationRef.navigate(name, parms);
-    }
-}
+const Stack = createStackNavigator();
+
 
 
 export default class Login extends React.Component {
