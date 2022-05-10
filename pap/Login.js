@@ -84,7 +84,7 @@ export default class Login extends React.Component {
                         }
                        if(json.user.perm) {
                            alert("You are logged in.");
-                           navigation.navigate('Navigation') // Doesnt work (TypeError: undefined is not an object (navigation.navigate)
+                           navigation.navigate('Nav') // Doesnt work (TypeError: undefined is not an object (navigation.navigate)
                        }
                         this.setState({
                             user: json,
